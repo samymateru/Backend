@@ -89,7 +89,7 @@ async def add_new_sub_program(connection: AsyncConnection, sub_program: NewSubPr
             count = reference[0].get("reference")
             if count is None:
                 count = 1
-                prefix = f"PROC-{count:04d}"
+                prefix = f"PROC-{count:05d}"
 
             else:
                 count = int(count) + 1
