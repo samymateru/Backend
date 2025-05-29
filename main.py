@@ -87,7 +87,7 @@ app.add_middleware(RateLimiterMiddleware, max_requests=500, window_seconds=60)
 
 
 
-@app.post("/test/{company_id}")
+@app.post("/test/{company_i}")
 async def tester(
         company_id: str,
         db=Depends(get_async_db_connection),
