@@ -332,7 +332,7 @@ async def query_engagement_details(connection: AsyncConnection, engagement_id: s
     query_root_cause_rating = sql.SQL(
         """
         SELECT
-        COUNT(*) FILTER (WHERE issue.status != 'Not started') AS total_issues,
+        COUNT(*) FILTER (WHERE i.status != 'Not started') AS total_issues,
 
         -- Root cause summary as JSON
         (
