@@ -23,6 +23,7 @@ class NewTask(BaseModel):
     description: Optional[str]
     raised_by: Optional[User]
     action_owner: Optional[List[ActionOwner]]
+    due_date: datetime = datetime.now()
     href: Optional[str]
 
 class ResolveTask(BaseModel):
