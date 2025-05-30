@@ -39,6 +39,7 @@ class LOD2Feedback(str, Enum):
 
 class Issue(BaseModel):
     id: Optional[str] = None
+    reference: Optional[str] = None
     title: Optional[str]
     criteria: Optional[str]
     finding: Optional[str]

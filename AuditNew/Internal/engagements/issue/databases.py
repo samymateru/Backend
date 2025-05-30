@@ -97,6 +97,7 @@ async def add_new_issue(connection: AsyncConnection, issue: Issue, sub_program_i
         """
         INSERT INTO public.issue (
                 id,
+                reference,
                 sub_program,
                 engagement,
                 title,
@@ -133,7 +134,7 @@ async def add_new_issue(connection: AsyncConnection, issue: Issue, sub_program_i
                 revised_status
                 )
         VALUES (
-         %s, %s, %s, %s, %s, %s, %s, %s,
+         %s, %s, %s, %s, %s, %s, %s, %s, %s,
          %s, %s, %s, %s, %s, %s, %s, %s, %s,
          %s, %s, %s, %s, %s, %s, %s, %s, %s,
          %s, %s, %s, %s, %s, %s, %s, %s, %s
@@ -155,6 +156,7 @@ async def add_new_issue(connection: AsyncConnection, issue: Issue, sub_program_i
                 await cursor.execute(update_company_module_external, (pref, reference[0].get("id")))
 
             await cursor.execute(query,(
+                get_unique_key(),
                 issue_id,
                 sub_program_id,
                 engagement_id,
