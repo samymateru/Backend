@@ -195,9 +195,9 @@ async def add_new_issue(connection: AsyncConnection, issue: Issue, sub_program_i
     except ForeignKeyViolation:
         await connection.rollback()
         raise HTTPException(status_code=400, detail="Sub program id is invalid")
-    except UniqueViolation:
+    except UniqueViolation as u:
         await connection.rollback()
-        raise HTTPException(status_code=409, detail="Issue already exist")
+        raise HTTPException(status_code=409, detail=f"Issue already exist {u}")
     except Exception as e:
         await connection.rollback()
         raise HTTPException(status_code=400, detail=f"Error creating issue {e}")
