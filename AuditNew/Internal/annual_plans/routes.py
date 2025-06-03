@@ -41,16 +41,16 @@ async def create_new_annual_plan(
         attachment: UploadFile = File(...),
         db = Depends(get_async_db_connection),
         background_tasks: BackgroundTasks = BackgroundTasks(),
-        #user: CurrentUser  = Depends(get_current_user)
+        user: CurrentUser  = Depends(get_current_user)
     ):
-    #if user.status_code != 200:
-        #raise HTTPException(status_code=user.status_code, detail=user.description)
+    if user.status_code != 200:
+        raise HTTPException(status_code=user.status_code, detail=user.description)
     try:
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
             shutil.copyfileobj(attachment.file, tmp)
             temp_path = tmp.name
 
-        key: str = f"annual_plans/{"user.company_name"}/{uuid.uuid4()}-{attachment.filename}"
+        key: str = f"annual_plans/{user.company_name}/{uuid.uuid4()}-{attachment.filename}"
         public_url: str = f"https://{os.getenv("S3_BUCKET_NAME")}.s3.{os.getenv("AWS_DEFAULT_REGION")}.amazonaws.com/{key}"
 
         background_tasks.add_task(upload_file, temp_path, key)
