@@ -12,6 +12,7 @@ class AnnualPlansStatus(str, Enum):
 
 class AnnualPlan(BaseModel):
     id: str = Field(default_factory=get_unique_key)
+    reference: Optional[str] = None
     name: str
     year: Optional[str] = datetime.now().year
     status: AnnualPlansStatus = AnnualPlansStatus.NOT_STARTED
