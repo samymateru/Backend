@@ -230,20 +230,15 @@ async def query_planning_details(connection: AsyncConnection, plan_id: str):
     query = sql.SQL(
         """
         SELECT
-        COUNT(*) AS total_engagements,
+        jsonb_build_object(
+            'total', COUNT(*),
+            'pending', COUNT(*) FILTER (WHERE eng.status = 'Pending'),
+            'ongoing', COUNT(*) FILTER (WHERE eng.status = 'Ongoing'),
+            'completed', COUNT(*) FILTER (WHERE eng.status = 'Completed')
+        ) AS planning_summary
 
-        (
-        SELECT jsonb_object_agg(status, count)
-        FROM (
-          SELECT status, COUNT(*) AS count
-          FROM engagements
-          WHERE plan_id = %s
-          GROUP BY status
-        ) AS status_counts
-        ) AS status_summary
-
-        FROM engagements
-        WHERE plan_id = %s;
+        FROM engagements eng
+        WHERE eng.plan_id = %s;
         """
     )
     try:

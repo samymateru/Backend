@@ -41,10 +41,10 @@ async def fetch_plan_details(
         if data is None:
             raise HTTPException(status_code=400, detail="No plan details available")
         return PlanDetails(
-            total=data.get("total_engagements") or 0,
-            completed=data.get("status_summary", {}).get("Completed", 0),
-            not_started=data.get("status_summary", {}).get("Not started", 0),
-            closed=data.get("status_summary", {}).get("Closed", 0)
+            total=data.get("planning_summary", {}).get("total", 0),
+            completed=data.get("planning_summary", {}).get("completed", 0),
+            ongoing=data.get("planning_summary", {}).get("ongoing", 0),
+            pending=data.get("planning_summary", {}).get("pending", 0)
         )
     except HTTPException as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)
