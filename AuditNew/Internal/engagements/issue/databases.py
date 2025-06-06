@@ -405,7 +405,7 @@ async def send_accept_response(connection: AsyncConnection, issue: IssueAcceptRe
                             )
                             update = sql.SQL("""
                                             UPDATE public.issue SET 
-                                            devised_status = %s,
+                                            revised_status = %s,
                                             response = %s
                                             WHERE id = %s
                                             """)
@@ -439,7 +439,7 @@ async def send_accept_response(connection: AsyncConnection, issue: IssueAcceptRe
                             )
                             update = sql.SQL("""
                                         UPDATE public.issue SET 
-                                        devised_status = %s,
+                                        revised_status = %s,
                                         response = %s
                                         WHERE id = %s
                                         """)
@@ -490,10 +490,11 @@ async def send_accept_response(connection: AsyncConnection, issue: IssueAcceptRe
             else:
                 raise HTTPException(status_code=403, detail=f"Your not issue {issue.actor.value}")
 
+    except HTTPException:
+        raise
     except Exception as e:
         await connection.rollback()
         raise HTTPException(status_code=400, detail=f"Error sending accept response {e}")
-
 async def send_decline_response(connection: AsyncConnection, issue: IssueDeclineResponse, issue_id: str, user_email: str, user_name: str):
     query = sql.SQL("SELECT * FROM public.issue WHERE id = %s")
     try:
