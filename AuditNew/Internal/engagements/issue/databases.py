@@ -791,7 +791,7 @@ async def mark_issue_reportable(connection: AsyncConnection, reportable: bool, i
 async def request_extension_time(connection: AsyncConnection, revise: Revise, issue_id: str, issue_details: IssueImplementationDetails, user_email: str):
     query = sql.SQL(
         """
-        SELECT revised_count FROM public.issue WHERE id = {issue_id}
+        SELECT revised_count, lod1_implementer FROM public.issue WHERE id = {issue_id}
         """).format(issue_id=sql.Literal(issue_id))
 
     query_update_revise = sql.SQL(
@@ -833,7 +833,9 @@ async def request_extension_time(connection: AsyncConnection, revise: Revise, is
                     issue_details=issue_details
                 )
             else:
-                raise HTTPException(status_code=400, detail=f"Error your not ")
+                raise HTTPException(status_code=403, detail=f"Your not Implementor")
+    except HTTPException:
+        raise
     except Exception as e:
         await connection.rollback()
         raise HTTPException(status_code=400, detail=f"Error request extension time {e}")
