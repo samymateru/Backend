@@ -211,7 +211,7 @@ async def issue_decline_response(
 @router.put("/revise/{issue_id}", response_model=ResponseMessage)
 async def request_revise(
         issue_id: str,
-        revised_date: datetime,
+        revised_date: datetime = Form(...),
         reason: str = Form(...),
         attachment: UploadFile = File(...),
         db=Depends(get_async_db_connection),
