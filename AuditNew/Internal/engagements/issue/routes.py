@@ -224,7 +224,25 @@ async def request_revise(
             reason=reason,
             revised_date=revised_date,
         )
-        await request_extension_time(connection=db, revise=revise, issue_id=issue_id, user_email=user.user_email)
+
+        issue_details = IssueImplementationDetails(
+            notes=reason,
+            attachments=[attachment.filename],
+            issued_by=User(
+                name=user.user_name,
+                email=user.user_email,
+                date_issued=datetime.now()
+            ),
+            type="extension"
+        )
+
+        await request_extension_time(
+            connection=db,
+            revise=revise,
+            issue_id=issue_id,
+            user_email=user.user_email,
+            issue_details=issue_details)
+
         return ResponseMessage(detail=f"Successfully requesting time extension")
     except HTTPException as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)
